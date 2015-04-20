@@ -65,7 +65,13 @@ function httpModuleRequest(uri, callback) {
     var thisRequest = new EventEmitter();
     thisRequest.setEncoding = function() {};
 
+    var ended = false;
     thisRequest.end = function() {
+        if (ended) {
+            return;
+        }
+        
+        ended = true;
         var thisResponse = new EventEmitter();
         // Request module checks against the connection object event emitter
         thisResponse.connection = thisResponse;
@@ -93,6 +99,14 @@ function httpModuleRequest(uri, callback) {
 
     }
     thisRequest.write = function() {}
+    thisRequest.setTimeout = function() {};
+
+    setTimeout(function() {
+        if (!ended) {
+            thisRequest.end();
+        }
+    }, 10);
+
     return thisRequest;
 }
 
@@ -198,8 +212,12 @@ function Fakeweb() {
             } else {
                 interceptedUris[options.uri].response = fs.readFileSync(options.file).toString();
             }
-        } else if (options.body != undefined) {
-            interceptedUris[options.uri].response = options.body;
+        } else if (options.body !== undefined) {
+            if (typeof options.body === "object") {
+                interceptedUris[options.uri].response = JSON.stringify(options.body);
+            } else {
+                interceptedUris[options.uri].response = options.body;
+            }
         }
         interceptedUris[options.uri].statusCode = options.statusCode || 200;
         interceptedUris[options.uri].headers = options.headers || {};
@@ -225,5 +243,12 @@ function parseUrl(uri) {
             tempUrl.port = 443;
         }
     }
+
+    //Forcing formatting with port
+    //https://nodejs.org/api/url.html#url_url_format_urlobj
+    tempUrl.host = undefined;
+
+    // console.log("PARSED URL: " + url.format(tempUrl));
+
     return url.format(tempUrl);
 }
