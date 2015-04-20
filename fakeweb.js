@@ -62,6 +62,7 @@ function getStatusCode(uri) {
 }
 
 function httpModuleRequest(uri, callback) {
+    uri = parseUrl(uri);
     var thisRequest = new EventEmitter();
     thisRequest.setEncoding = function() {};
 
@@ -121,6 +122,7 @@ function Fakeweb() {
         }
 
         var uri = options.uri || options.url;
+        uri = parseUrl(uri);
         var followRedirect = options.followRedirect !== undefined ? options.followRedirect : true
         if (interceptable(uri)) {
             var statusCode = getStatusCode(uri);
@@ -148,6 +150,7 @@ function Fakeweb() {
         }
 
         var url = options.uri || options.url;
+        uri = parseUrl(uri);
         if (interceptable(url, "POST")) {
             var resp = {statusCode : getStatusCode(url)};
             resp.headers = interceptedUris[url].headers;
@@ -213,11 +216,7 @@ function Fakeweb() {
                 interceptedUris[options.uri].response = fs.readFileSync(options.file).toString();
             }
         } else if (options.body !== undefined) {
-            if (typeof options.body === "object") {
-                interceptedUris[options.uri].response = JSON.stringify(options.body);
-            } else {
-                interceptedUris[options.uri].response = options.body;
-            }
+            interceptedUris[options.uri].response = options.body;
         }
         interceptedUris[options.uri].statusCode = options.statusCode || 200;
         interceptedUris[options.uri].headers = options.headers || {};
