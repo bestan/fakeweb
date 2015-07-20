@@ -10,8 +10,6 @@ var fs = require('fs')
   , ignoredUris = {}
   ;
 
-
-
 function interceptable(uri, method) {
 
     if(typeof method === "undefined")
@@ -71,7 +69,7 @@ function httpModuleRequest(uri, callback) {
         if (ended) {
             return;
         }
-        
+
         ended = true;
         var thisResponse = new EventEmitter();
         // Request module checks against the connection object event emitter
@@ -150,7 +148,7 @@ function Fakeweb() {
         }
 
         var url = options.uri || options.url;
-        uri = parseUrl(uri);
+        url = parseUrl(url);
         if (interceptable(url, "POST")) {
             var resp = {statusCode : getStatusCode(url)};
             resp.headers = interceptedUris[url].headers;
