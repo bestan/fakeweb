@@ -139,6 +139,9 @@ function Fakeweb() {
                 if (interceptedUris[uri].contentType) {
                     resp.headers['content-type'] =  interceptedUris[uri].contentType;
                 }
+                resp.request = {
+                    href: url
+                };
                 return callback(null, resp, interceptedUris[uri].response);
             }
         } else {
@@ -160,6 +163,9 @@ function Fakeweb() {
             if (interceptedUris[url].contentType) {
                 resp.headers['content-type'] =  interceptedUris[url].contentType;
             }
+            resp.request = {
+                href: url
+            };
             return callback(null, resp, interceptedUris[url].response);
         } else {
             return oldRequestPost.call(request, options, callback);
