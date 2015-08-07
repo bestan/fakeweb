@@ -93,13 +93,15 @@ function httpModuleRequest(uri, callback) {
             href: uri
         };
 
-        if (callback) {
-            callback(thisResponse);
-        }
+        setTimeout(function() {
+            if (callback) {
+                callback(thisResponse);
+            }
 
-        thisResponse.emit('data', interceptedUris[uri].response);
-        thisResponse.emit('end');
-        thisResponse.emit('close');
+            thisResponse.emit('data', interceptedUris[uri].response);
+            thisResponse.emit('end');
+            thisResponse.emit('close');
+        }, 2);
 
     }
     thisRequest.write = function() {}
@@ -142,7 +144,10 @@ function Fakeweb() {
                 resp.request = {
                     href: url
                 };
-                return callback(null, resp, interceptedUris[uri].response);
+                setTimeout(function() {
+                    callback(null, resp, interceptedUris[uri].response);
+                }, 2);
+                return;
             }
         } else {
             return oldRequestGet.call(request, options, callback);
@@ -166,7 +171,10 @@ function Fakeweb() {
             resp.request = {
                 href: url
             };
-            return callback(null, resp, interceptedUris[url].response);
+            setTimeout(function() {
+                callback(null, resp, interceptedUris[uri].response);
+            }, 2);
+            return;
         } else {
             return oldRequestPost.call(request, options, callback);
         }
