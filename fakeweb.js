@@ -88,6 +88,11 @@ function httpModuleRequest(uri, callback) {
         }
         thisRequest.emit('response', thisResponse);
 
+        //Compatibility with scraperjs
+        thisRequest.request = {
+            href: uri
+        };
+
         if (callback) {
             callback(thisResponse);
         }
