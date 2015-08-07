@@ -172,7 +172,7 @@ function Fakeweb() {
                 href: url
             };
             setTimeout(function() {
-                callback(null, resp, interceptedUris[uri].response);
+                callback(null, resp, interceptedUris[url].response);
             }, 2);
             return;
         } else {
