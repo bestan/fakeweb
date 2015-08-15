@@ -98,7 +98,14 @@ function httpModuleRequest(uri, callback) {
                 callback(thisResponse);
             }
 
-            thisResponse.emit('data', interceptedUris[uri].response);
+            var final_response;
+            var original_response = interceptedUris[uri].response;
+            if (typeof original_response === "object") {
+                final_response = JSON.stringify(original_response);
+            } else {
+                final_response = original_response;
+            }
+            thisResponse.emit('data', final_response);
             thisResponse.emit('end');
             thisResponse.emit('close');
         }, 2);
