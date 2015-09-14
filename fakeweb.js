@@ -271,7 +271,8 @@ function parseUrl(uri) {
     //https://nodejs.org/api/url.html#url_url_format_urlobj
     tempUrl.host = undefined;
 
-    // console.log("PARSED URL: " + url.format(tempUrl));
+    tempUrl.search = undefined;
+    tempUrl.query = undefined;
 
     return url.format(tempUrl);
 }
